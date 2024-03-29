@@ -650,7 +650,7 @@ public class Transaction: ChildMessage {
         if scriptPath {
             var leafData = Data()
             leafData.append(contentsOf: [Transaction.LEAF_VERSION_TAPSCRIPT])
-            byteArraySerialize(bytes: try script.getProgram() ?? [], outData: &leafData)
+            byteArraySerialize(bytes: try script.getProgram(), outData: &leafData)
             let taggedHash = Utils.taggedHash(tag: "TapLeaf", msg: leafData.bytes)
             bosData.append(contentsOf: taggedHash)
             bosData.append(contentsOf: [0x00])

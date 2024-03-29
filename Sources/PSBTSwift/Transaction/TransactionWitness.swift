@@ -129,7 +129,7 @@ public class TransactionWitness: ChildMessage, Equatable {
     public func toString() -> String {
         var builder = ""
         for push in pushes {
-            if push == nil {
+            if push.count == 0 {
                 builder.append("NULL")
             } else if push.isEmpty {
                 builder.append("EMPTY")

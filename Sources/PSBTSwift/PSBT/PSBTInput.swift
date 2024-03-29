@@ -242,7 +242,7 @@ public class PSBTInput {
                 guard let entrydata = entry.data else {
                     throw PSBTError.message("Invalid entry data")
                 }
-//                this.tapKeyPathSignature = TransactionSignature.decodeFromBitcoin(SCHNORR, entry.getData(), true);
+                self.tapKeyPathSignature = try TransactionSignature.decodeFromBitcoin(type: TransactionType.schnorr, data: entrydata, requireCanonicalEncoding: true)
             case PSBTInput.PSBT_IN_TAP_BIP32_DERIVATION: break
             case PSBTInput.PSBT_IN_TAP_INTERNAL_KEY: break
             default:
@@ -386,7 +386,7 @@ public class PSBTInput {
     }
     
     public func isSigned() -> Bool {
-        if let _tapKeyPathSignature = self.tapKeyPathSignature {
+        if self.tapKeyPathSignature != nil {
             return true
         } else if self.partialSignatures.isEmpty {
             do {

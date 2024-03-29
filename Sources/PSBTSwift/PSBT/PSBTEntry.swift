@@ -86,7 +86,7 @@ public struct PSBTEntry {
             throw PSBTError.message("Invalid taproot key derivation: no bytes")
         }
         let varInt = VarInt(buf: data.bytes, offset: 0)
-        var offset = varInt.originallyEncodedSize
+        let offset = varInt.originallyEncodedSize
         
         if data.count < offset + (Int(varInt.value) * 32) {
             throw PSBTError.message("Invalid taproot key derivation: not enough bytes for leaf hashes")

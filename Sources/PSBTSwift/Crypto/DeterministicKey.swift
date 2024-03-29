@@ -48,7 +48,7 @@ public class DeterministicKey {
     
     public init(parent: DeterministicKey?, publicKey: Data?, priv: Data?, childNumberPath: [ChildNumber], chainCode: [UInt8]) {
         var noParent = true
-        if let _parent = parent {
+        if parent != nil {
             noParent = false
         } else {
             noParent = true
@@ -64,7 +64,7 @@ public class DeterministicKey {
     
     public init(parent: DeterministicKey?, priv: Data, childNumberPath: [ChildNumber], chainCode: [UInt8]) {
         var noParent = true
-        if let _parent = parent {
+        if parent != nil {
             noParent = false
         } else {
             noParent = true

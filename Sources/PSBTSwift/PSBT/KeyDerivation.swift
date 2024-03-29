@@ -74,8 +74,7 @@ public class KeyDerivation: Hashable, Equatable {
              }
              if let nodeNumber = Int(n) {
                  do {
-                     let childNumber = try ChildNumber(childNumber: nodeNumber, isHardened: isHard)
-                     nodes.append(try! ChildNumber(childNumber: nodeNumber, isHardened: isHard))
+                     nodes.append(try ChildNumber(childNumber: nodeNumber, isHardened: isHard))
                  } catch let error {
                      throw error
                  }
