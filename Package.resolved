@@ -1,0 +1,133 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ASN1",
+        "repositoryURL": "https://github.com/xueyuejie/ASN1.git",
+        "state": {
+          "branch": null,
+          "revision": "aff12deef462b16002959e26adc26588714e1e96",
+          "version": "2.5.1"
+        }
+      },
+      {
+        "package": "Base58Swift",
+        "repositoryURL": "https://github.com/mathwallet/Base58Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "04ccae070ac6f3117db11af864a04229f7c1e025",
+          "version": "0.0.1"
+        }
+      },
+      {
+        "package": "Bech32",
+        "repositoryURL": "https://github.com/lishuailibertine/Bech32",
+        "state": {
+          "branch": null,
+          "revision": "82e758ddf9cbf546c807d3913933972b59b4947b",
+          "version": "1.0.5"
+        }
+      },
+      {
+        "package": "BigInt",
+        "repositoryURL": "https://github.com/attaswift/BigInt.git",
+        "state": {
+          "branch": null,
+          "revision": "0ed110f7555c34ff468e72e1686e59721f2b0da6",
+          "version": "5.3.0"
+        }
+      },
+      {
+        "package": "BIP39swift",
+        "repositoryURL": "https://github.com/mathwallet/BIP39swift",
+        "state": {
+          "branch": null,
+          "revision": "6e654c1fedac7dc3f01443d8bdf108ab6d50245d",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "BitcoinSwift",
+        "repositoryURL": "https://github.com/yuzhiyou1990/BitcoinSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "06b1721dce7d48f4fa59e1ce1403647b3f8c0975",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "package": "CryptoSwift",
+        "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "7892a123f7e8d0fe62f9f03728b17bbd4f94df5c",
+          "version": "1.8.1"
+        }
+      },
+      {
+        "package": "DataCompression",
+        "repositoryURL": "https://github.com/mw99/DataCompression",
+        "state": {
+          "branch": null,
+          "revision": "5ab15951321b08b74511601cbd0497667649d70b",
+          "version": "3.8.0"
+        }
+      },
+      {
+        "package": "RIPEMDSwift",
+        "repositoryURL": "https://github.com/mathwallet/RIPEMDSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "1a9b1487d1880585c8cc46e26b6d9838184f7858",
+          "version": "0.0.1"
+        }
+      },
+      {
+        "package": "Secp256k1Swift",
+        "repositoryURL": "https://github.com/mathwallet/Secp256k1Swift",
+        "state": {
+          "branch": null,
+          "revision": "3eac0ee49d57eaf0d91d54df876194cdd0c971fe",
+          "version": "2.0.0"
+        }
+      },
+      {
+        "package": "swift-atomics",
+        "repositoryURL": "https://github.com/apple/swift-atomics.git",
+        "state": {
+          "branch": null,
+          "revision": "cd142fd2f64be2100422d658e7411e39489da985",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "swift-collections",
+        "repositoryURL": "https://github.com/apple/swift-collections.git",
+        "state": {
+          "branch": null,
+          "revision": "d029d9d39c87bed85b1c50adee7c41795261a192",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "635b2589494c97e48c62514bc8b37ced762e0a62",
+          "version": "2.63.0"
+        }
+      },
+      {
+        "package": "swift-system",
+        "repositoryURL": "https://github.com/apple/swift-system.git",
+        "state": {
+          "branch": null,
+          "revision": "025bcb1165deab2e20d4eaba79967ce73013f496",
+          "version": "1.2.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
