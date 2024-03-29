@@ -41,7 +41,7 @@ public class PSBTOutput {
         self.publicKey = publicKey
 //        tapInternalKey?.getPubKeyXCoord()
 
-        if let tapInternalKey = publicKey, !derivedPublicKeys.values.isEmpty {
+        if let _ = publicKey, !derivedPublicKeys.values.isEmpty {
             let tapKeyDerivation = derivedPublicKeys.values.first!
             tapDerivedPublicKeys[self.publicKey!] = [tapKeyDerivation: []]
         }
@@ -106,13 +106,9 @@ public class PSBTOutput {
 
         for (key, value) in self.tapDerivedPublicKeys {
             if !value.isEmpty {
-//                entries.append(PSBTEntry.populateEntry(type: PSBTOutput.PSBT_OUT_TAP_BIP32_DERIVATION, keyData: key.pubKeyXCoord, data: serializeTaprootKeyDerivation([], value.keys.first!)))
+                entries.append(PSBTEntry.populateEntry(type: PSBTOutput.PSBT_OUT_TAP_BIP32_DERIVATION, keyData: key, data: try PSBTEntry.serializeTaprootKeyDerivation(leafHashes: [Data](), keyDerivation: value.first!.key).bytes))
             }
         }
-
-//        if let tapInternalKey = self.tapInternalKey {
-//            entries.append(PSBTEntry.populateEntry(type: PSBTOutput.PSBT_OUT_TAP_INTERNAL_KEY, keyData: nil, data: tapInternalKey.pubKeyXCoord))
-//        }
         if let publicKey = self.publicKey {
             entries.append(PSBTEntry.populateEntry(type: PSBTOutput.PSBT_OUT_TAP_INTERNAL_KEY, keyData: nil, data: publicKey))
         }
