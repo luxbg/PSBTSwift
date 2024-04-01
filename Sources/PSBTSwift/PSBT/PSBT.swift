@@ -346,7 +346,7 @@ public class PSBT {
 
         if let version = version {
             var versionBytes = [UInt8](repeating: 0, count: 4)
-            Utils.uint32ToByteArrayLE(val: UInt32(version), out: &versionBytes, offset: 0)
+            Utils.uint32ToByteArrayLE(val: Int64(version), out: &versionBytes, offset: 0)
             entries.append(PSBTEntry.populateEntry(type: PSBT.PSBT_GLOBAL_VERSION, keyData: nil, data: versionBytes))
         }
 

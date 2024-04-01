@@ -170,7 +170,7 @@ public struct PSBTEntry {
         
         for childNumber in derivationArray {
             var indexBytes = [UInt8](repeating: 0, count: 4)
-            Utils.uint32ToByteArrayLE(val: UInt32(childNumber.i), out: &indexBytes, offset: 0)
+            Utils.uint32ToByteArrayLE(val: Int64(childNumber.i), out: &indexBytes, offset: 0)
             data.append(Data(indexBytes))
         }
         return data

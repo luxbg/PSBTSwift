@@ -270,7 +270,7 @@ public class PSBTInput {
         
         if let _sigHash = sigHash {
             var sigHashBytes = [UInt8](repeating: 0, count: 4)
-            Utils.uint32ToByteArrayLE(val: UInt32(_sigHash.rawValue), out: &sigHashBytes, offset: 0)
+            Utils.uint32ToByteArrayLE(val: Int64(_sigHash.rawValue), out: &sigHashBytes, offset: 0)
             entries.append(PSBTEntry.populateEntry(type: PSBTInput.PSBT_IN_SIGHASH_TYPE, keyData: nil, data: sigHashBytes))
         }
         

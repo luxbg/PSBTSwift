@@ -56,7 +56,9 @@ public struct TransactionSignature: Hashable {
     
     public func encodeToBitcoin() throws -> [UInt8] {
         if ecdsaSignature != nil {
-            return self.ecdsaSignature!.derByteArray()
+            var data = self.ecdsaSignature!.derByteArray()
+            data.append(contentsOf: [sigHashFlags])
+            return data
         } else if let _schnorrSignature = schnorrSignature {
             let sigHash = getSigHash()
             var buffer = [UInt8]()

@@ -55,12 +55,12 @@ public class VarInt {
         case 5:
             bytes = [UInt8](repeating: 0, count: 5)
             bytes[0] = 254
-            Utils.uint32ToByteArrayLE(val: UInt32(value), out: &bytes, offset: 1)
+            Utils.uint32ToByteArrayLE(val: Int64(value), out: &bytes, offset: 1)
             return bytes
         default:
             bytes = [UInt8](repeating: 0, count: 9)
             bytes[0] = 255
-            Utils.uint64ToByteArrayLE(val: UInt64(value), out: &bytes, offset: 1)
+            Utils.uint64ToByteArrayLE(val: Int64(value), out: &bytes, offset: 1)
             return bytes
         }
     }

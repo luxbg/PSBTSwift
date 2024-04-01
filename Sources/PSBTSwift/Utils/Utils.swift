@@ -96,14 +96,14 @@ public struct Utils {
         return buf
     }
     
-    public static func uint32ToByteArrayLE(val: UInt32, out: inout [UInt8], offset: Int) {
+    public static func uint32ToByteArrayLE(val: Int64, out: inout [UInt8], offset: Int) {
         out[offset] = UInt8(val & 0xFF)
         out[offset + 1] = UInt8((val >> 8) & 0xFF)
         out[offset + 2] = UInt8((val >> 16) & 0xFF)
         out[offset + 3] = UInt8((val >> 24) & 0xFF)
     }
     
-    public static func uint64ToByteArrayLE(val: UInt64, out: inout [UInt8], offset: Int) {
+    public static func uint64ToByteArrayLE(val: Int64, out: inout [UInt8], offset: Int) {
         out[offset] = UInt8(0xFF & val)
         out[offset + 1] = UInt8(0xFF & (val >> 8))
         out[offset + 2] = UInt8(0xFF & (val >> 16))

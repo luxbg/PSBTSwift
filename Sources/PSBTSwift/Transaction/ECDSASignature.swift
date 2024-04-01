@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import BigInt
+import Asn1BInt
 import ASN1
 
 public struct ECDSASignature: Equatable, Hashable {
@@ -19,13 +19,13 @@ public struct ECDSASignature: Equatable, Hashable {
     }
     
     public var isCanonical: Bool {
-        return BigInt(Data(s)) <= BigInt(Data(hex: "7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0"))
+        return  BInt(signed: s) <= BInt("7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0", radix: 16)!
     }
     
     public func toCanonicalised() -> ECDSASignature {
         if !isCanonical {
-            let news = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)! - BigUInt(Data(s))
-            return ECDSASignature(r: r, s: news.serialize().bytes)
+            let news = BInt("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", radix: 16)! - BInt(signed: s)
+            return ECDSASignature(r: r, s: news.asSignedBytes())
         } else {
             return self
         }
@@ -44,7 +44,7 @@ public struct ECDSASignature: Equatable, Hashable {
             guard seqObj.getValue().count == 2, let r = seqObj.getValue()[0] as? ASN1Integer, let s = seqObj.getValue()[1] as? ASN1Integer else {
                 throw PSBTError.message("Reached ASN.1 stream error")
             }
-            return ECDSASignature(r: r.value.serialize().bytes, s: s.value.serialize().bytes)
+            return ECDSASignature(r: r.value.asSignedBytes(), s: s.value.asSignedBytes())
         } catch {
             throw PSBTError.message("Failed to decode ASN.1 data.")
         }
@@ -74,8 +74,8 @@ public struct ECDSASignature: Equatable, Hashable {
     }
     
     public func derByteArray() -> [UInt8] {
-        let rASN1 = ASN1Integer(BigInt(Data(r)))
-        let sASN1 = ASN1Integer(BigInt(Data(s)))
+        let rASN1 = ASN1Integer(BInt(signed: r))
+        let sASN1 = ASN1Integer(BInt(signed: s))
         let sequence = ASN1Sequence([rASN1,sASN1])
         let encodedData = sequence.encode()
         return encodedData
