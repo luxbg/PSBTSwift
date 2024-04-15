@@ -8,6 +8,7 @@
 import Foundation
 import Asn1BInt
 import ASN1
+import CSecp256k1
 
 public struct ECDSASignature: Equatable, Hashable {
     public let r: [UInt8]
@@ -51,21 +52,26 @@ public struct ECDSASignature: Equatable, Hashable {
     }
     
     public func verify(data: Data, pub: Data) throws -> Bool {
-//        do {
-//            let signer = ECDSASigner(hash: .sha256)
-//            
-//            guard let publicKey = try? Curve25519.PublicKey(raw: pub) else {
-//                throw SignatureVerificationException()
-//            }
-//            
-//            let signature = try ECDSASignature(r: r, s: s)
-//            
-//            return try signer.verify(signature: signature, input: data, publicKey: publicKey)
-//        } catch {
-//            print("Caught exception: \(error)")
-//            return false
-//        }
-        return false
+        let signature = Data(encodeToDER())
+        let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))!
+        defer { secp256k1_context_destroy(ctx) }
+
+        let signaturePointer = UnsafeMutablePointer<secp256k1_ecdsa_signature>.allocate(capacity: 1)
+        defer { signaturePointer.deallocate() }
+        guard signature.withUnsafeBytes({ secp256k1_ecdsa_signature_parse_der(ctx, signaturePointer, $0, signature.count) }) == 1 else {
+            throw PSBTError.message("ecdsasignature verify error")
+        }
+
+        let pubkeyPointer = UnsafeMutablePointer<secp256k1_pubkey>.allocate(capacity: 1)
+        defer { pubkeyPointer.deallocate() }
+        guard pub.withUnsafeBytes({ secp256k1_ec_pubkey_parse(ctx, pubkeyPointer, $0, pub.count) }) == 1 else {
+            throw PSBTError.message("ecdsasignature verify error")
+        }
+
+        guard data.withUnsafeBytes ({ secp256k1_ecdsa_verify(ctx, signaturePointer, $0, pubkeyPointer) }) == 1 else {
+            return false
+        }
+        return true
     }
     
     public func hasLowR() -> Bool {

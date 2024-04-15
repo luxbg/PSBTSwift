@@ -195,12 +195,12 @@ public class PSBTInput {
             case PSBTInput.PSBT_IN_BIP32_DERIVATION: 
                 do {
                     try entry.checkOneBytePlusPubKey()
-                    guard let entrydata = entry.data else {
+                    guard let entrydata = entry.data, let entryKeyData = entry.keyData else {
                         throw PSBTError.message("Invalid entry data")
                     }
 //                    ECKey derivedPublicKey = ECKey.fromPublicOnly(entry.getKeyData());
                     let keyDerivation = try PSBTEntry.parseKeyDerivation(data: Data(entrydata))
-                    self.derivedPublicKeys[entrydata] = keyDerivation
+                    self.derivedPublicKeys[entryKeyData] = keyDerivation
                 } catch let error {
                     throw error
                 }

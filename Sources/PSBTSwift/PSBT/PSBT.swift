@@ -366,8 +366,7 @@ public class PSBT {
         let globalEntries = try getGlobalEntries()
         for entry in globalEntries {
             if includeXpubs || (entry.keyType != PSBT.PSBT_GLOBAL_BIP32_PUBKEY && entry.keyType != PSBT.PSBT_GLOBAL_PROPRIETARY) {
-                let data = entry.serializeToStream()
-                baos.append(contentsOf: data.bytes)
+                entry.serializeToStream(&baos)
             }
         }
         baos.append(0x00)
@@ -378,8 +377,7 @@ public class PSBT {
                 if (includeXpubs || (entry.keyType != PSBTInput.PSBT_IN_BIP32_DERIVATION && entry.keyType != PSBTInput.PSBT_IN_PROPRIETARY
                                      && entry.keyType != PSBTInput.PSBT_IN_TAP_INTERNAL_KEY && entry.keyType != PSBTInput.PSBT_IN_TAP_BIP32_DERIVATION))
                     && (includeNonWitnessUtxos || entry.keyType != PSBTInput.PSBT_IN_NON_WITNESS_UTXO) {
-                    let data = entry.serializeToStream()
-                    baos.append(contentsOf: data.bytes)
+                    entry.serializeToStream(&baos)
                 }
             }
             baos.append(0x00)
@@ -391,8 +389,7 @@ public class PSBT {
                 if includeXpubs || (entry.keyType != PSBTOutput.PSBT_OUT_REDEEM_SCRIPT && entry.keyType != PSBTOutput.PSBT_OUT_WITNESS_SCRIPT
                                     && entry.keyType != PSBTOutput.PSBT_OUT_BIP32_DERIVATION && entry.keyType != PSBTOutput.PSBT_OUT_PROPRIETARY
                                     && entry.keyType != PSBTOutput.PSBT_OUT_TAP_INTERNAL_KEY && entry.keyType != PSBTOutput.PSBT_OUT_TAP_BIP32_DERIVATION) {
-                    let data = entry.serializeToStream()
-                    baos.append(contentsOf: data.bytes)
+                    entry.serializeToStream(&baos)
                 }
             }
             baos.append(0x00)

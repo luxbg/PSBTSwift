@@ -410,10 +410,10 @@ final class PSBTSwiftTests: XCTestCase {
         do {
             let transaction = Transaction()
             transaction.version = 2
-            try transaction.addOutput(value: 149990000, script: try Script(programBytes: Data(hex: "0014d85c2b71d0060b09c9886aeb815e50991dda124d").bytes))
-            try transaction.addOutput(value: 100000000,  script: try Script(programBytes: Data(hex: "001400aea9a2e5f0f876a588df5546e8742d1d87008f").bytes))
-            try transaction.addInput(spendTxHash: Data(hex: "75ddabb27b8845f5247975c8a5ba7c6f336c4570708ebe230caf6db5217ae858"), outputIndex: 0, script: Script(programBytes: [0]))
-            try transaction.addInput(spendTxHash: Data(hex: "1dea7cd05979072a3578cab271c02244ea8a090bbb46aa680a65ecd027048d83"), outputIndex: 1, script: try Script(programBytes: [0]))
+            let _ = try transaction.addOutput(value: 149990000, script: try Script(programBytes: Data(hex: "0014d85c2b71d0060b09c9886aeb815e50991dda124d").bytes))
+            let _ = try transaction.addOutput(value: 100000000,  script: try Script(programBytes: Data(hex: "001400aea9a2e5f0f876a588df5546e8742d1d87008f").bytes))
+            let _ = try transaction.addInput(spendTxHash: Data(hex: "75ddabb27b8845f5247975c8a5ba7c6f336c4570708ebe230caf6db5217ae858"), outputIndex: 0, script: Script(programBytes: []))
+            let _ = try transaction.addInput(spendTxHash: Data(hex: "1dea7cd05979072a3578cab271c02244ea8a090bbb46aa680a65ecd027048d83"), outputIndex: 1, script: try Script(programBytes: []))
 
             let psbt = PSBT(transaction: transaction)
             XCTAssertEqual("70736274ff01009a020000000258e87a21b56daf0c23be8e7070456c336f7cbaa5c8757924f545887bb2abdd750000000000ffffffff838d0427d0ec650a68aa46bb0b098aea4422c071b2ca78352a077959d07cea1d0100000000ffffffff0270aaf00800000000160014d85c2b71d0060b09c9886aeb815e50991dda124d00e1f5050000000016001400aea9a2e5f0f876a588df5546e8742d1d87008f000000000000000000", try psbt.toString())

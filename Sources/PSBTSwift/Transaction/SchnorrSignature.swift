@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CSecp256k1
 
 public struct SchnorrSignature:Equatable, Hashable {
     public let r: [UInt8]
@@ -48,7 +49,22 @@ public struct SchnorrSignature:Equatable, Hashable {
     }
 
     public func verify(data: Data, pub: Data) throws -> Bool {
-       return true
+        let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))!
+        var sig = encode()
+        var message = data.bytes
+        var pubkey = secp256k1_xonly_pubkey()
+
+        if (pub.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> Int32 in
+            let uint8Pointer = pointer.bindMemory(to: UInt8.self).baseAddress
+            return secp256k1_xonly_pubkey_parse(ctx, &pubkey, uint8Pointer!)
+        }) != 1 {
+            return false
+        }
+        
+        if secp256k1_schnorrsig_verify(ctx, &sig, &message, data.count, &pubkey) == 1 {
+            return true
+        }
+       return false
     }
     
     

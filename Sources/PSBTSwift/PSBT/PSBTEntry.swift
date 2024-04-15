@@ -66,7 +66,7 @@ public struct PSBTEntry {
             
             var keyData: [UInt8]?
             if key.count > 1 {
-                keyData = Array(key[1...])
+                keyData = Array(key.dropFirst())
             }
             
             let dataLen = try PSBTEntry.readCompactInt(psbtByteBuffer: &psbtByteBuffer)
@@ -177,26 +177,24 @@ public struct PSBTEntry {
     }
     
     public static func populateEntry(type: UInt8, keyData: [UInt8]?, data: [UInt8]?) -> PSBTEntry {
-        return PSBTEntry(key: nil, keyType: type, keyData: keyData, data: data)
+        return PSBTEntry(key: [type], keyType: type, keyData: keyData, data: data)
     }
 
-    public func serializeToStream() -> Data {
-        var data = Data()
+    public func serializeToStream(_ data: inout [UInt8]) {
         var keyLen = 1
         if let keyData = self.keyData {
             keyLen += keyData.count
         }
 
-        data.append(PSBTEntry.writeCompactInt(UInt64(keyLen)))
-        data.append(Data([self.keyType]))
+        data.append(contentsOf: PSBTEntry.writeCompactInt(UInt64(keyLen)).bytes)
+        data.append(contentsOf:[self.keyType])
         if let keyData = self.keyData {
-            data.append(Data(keyData))
+            data.append(contentsOf: keyData)
         }
         if let _data = self.data {
-            data.append(Data(_data))
-            data.append(PSBTEntry.writeCompactInt(UInt64(_data.count)))
+            data.append(contentsOf: PSBTEntry.writeCompactInt(UInt64(_data.count)).bytes)
+            data.append(contentsOf: _data)
         }
-        return data
     }
     
     public static func readCompactInt(psbtData: Data) throws -> Int {

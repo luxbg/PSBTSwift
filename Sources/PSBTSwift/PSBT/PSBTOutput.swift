@@ -60,8 +60,7 @@ public class PSBTOutput {
                 self.witnessScript = witnessScript
             case PSBTOutput.PSBT_OUT_BIP32_DERIVATION:
                 try entry.checkOneBytePlusPubKey()
-                let derivedPublicKey = entry.data
-                //                    ECKey(publicOnly: entry.keyData)
+                let derivedPublicKey = entry.keyData
                 let keyDerivation = try PSBTEntry.parseKeyDerivation(data: Data(entry.data!))
                 self.derivedPublicKeys[derivedPublicKey!] = keyDerivation
             case PSBTOutput.PSBT_OUT_PROPRIETARY:
