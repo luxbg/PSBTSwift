@@ -105,7 +105,7 @@ public class PSBTInput {
                 do {
                     try entry.checkOneByteKey()
                     let witnessTxOutput = TransactionOutput(parent: nil, rawtx: entry.data ?? [UInt8](), offset: 0)
-                    if try !ScriptType.P2SH.isScriptType(script: witnessTxOutput.script!) && !ScriptType.P2WPKH.isScriptType(script: witnessTxOutput.script!) && !ScriptType.P2WSH.isScriptType(script: witnessTxOutput.script!) && !ScriptType.P2TR.isScriptType(script: witnessTxOutput.script!) {
+                    if try !ScriptType.P2SH.isScriptType(script: witnessTxOutput.getScript()) && !ScriptType.P2WPKH.isScriptType(script: witnessTxOutput.getScript()) && !ScriptType.P2WSH.isScriptType(script: witnessTxOutput.getScript()) && !ScriptType.P2TR.isScriptType(script: witnessTxOutput.getScript()) {
                         throw PSBTError.message("Witness UTXO provided for non-witness or unknown input")
                     }
 

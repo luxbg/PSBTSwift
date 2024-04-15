@@ -39,7 +39,7 @@ public class TransactionOutput: ChildMessage, Equatable {
         let scriptLen = Int(readVarInt())
         length = cursor - offset + scriptLen
         scriptBytes = try readBytes(length: scriptLen)
-        script = try getScript()
+//        script = try getScript()
     }
 
     public func bitcoinSerialize()throws -> [UInt8] {
