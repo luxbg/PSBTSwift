@@ -36,7 +36,7 @@ public struct ChildNumber: Hashable, Equatable {
     }
 
     public func num() -> Int {
-        return i & (~0x80000000)
+        return i & 2147483647
     }
 
     public func toString(useApostrophes: Bool = true) -> String {
