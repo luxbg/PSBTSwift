@@ -483,18 +483,19 @@ final class PSBTSwiftTests: XCTestCase {
     
     func testtestTaprootExample() throws {
         do {
-            let strSignedPsbt = "cHNidP8BAH0CAAAAAdPUSBYKaQKOqAMgU2IcGuM6z7JtbkLe69OmYZoa4UxYAAAAAADmdQAAAp4CAAAAAAAAFgAUg+/zyGWbtKbIJb8ZasbGYDtItZhgrgEAAAAAACJRIJMQKWeQsI/WiRS+lmeeyeJaKFVnlVoBtXeuGTO7XIbrAAAAAE8BBDWHzwM27GqkgAAAAO1YZge2AP67ozhdoF9wgg2hpJw1jbVEXLKfxRQUNGEIAlog/wK83w7jxD37prhWrPenLxjGAJzkJKrj6h0ZPK8WED/ZeB1WAACAAQAAgAAAAIAAAQCJAgAAAAGBuBuu5OIheS4SKtYJufScCJDTWWLopBoXtFWhPDuRWQEAAAAA/f///wKNsQEAAAAAACJRIAjXFSnHwcD+J/obgd9CxVneHsUyFKM9xU7NY5K3DgCxHwIAAAAAAAAiUSAhUe66hJMCB1esHqXtxRVJHmviQ4ZjzFIwDWDPk+1KY6VyIQABASuNsQEAAAAAACJRIAjXFSnHwcD+J/obgd9CxVneHsUyFKM9xU7NY5K3DgCxAQMEAAAAAAETQCG/ZGuefjDVqBhmgVEuV1HbdxoZKDDWWTvTUrq6MJreRzj22k/WcFni6yPn9PGZkptZSNx9waf8ouP28ogJz24hFnRZPMvN82XI+lnim7dRKwFgpHnqiDoMGnIoFoSQRX7bGQA/2XgdVgAAgAEAAIAAAACAAQAAAAIAAAABFyB0WTzLzfNlyPpZ4pu3USsBYKR56og6DBpyKBaEkEV+2wAAIQflpK6JYWolG3K2DU7FU3hlkwSdU/69bglhZxaprqSvyxkAP9l4HVYAAIABAACAAAAAgAEAAAADAAAAAQUg5aSuiWFqJRtytg1OxVN4ZZMEnVP+vW4JYWcWqa6kr8sA";
+            Network.set(network: Network.testnet)
+            let strSignedPsbt = "cHNidP8BAH0CAAAAAdPUSBYKaQKOqAMgU2IcGuM6z7JtbkLe69OmYZoa4UxYAAAAAADmdQAAAp4CAAAAAAAAFgAUg+/zyGWbtKbIJb8ZasbGYDtItZhgrgEAAAAAACJRIJMQKWeQsI/WiRS+lmeeyeJaKFVnlVoBtXeuGTO7XIbrAAAAAE8BBDWHzwM27GqkgAAAAO1YZge2AP67ozhdoF9wgg2hpJw1jbVEXLKfxRQUNGEIAlog/wK83w7jxD37prhWrPenLxjGAJzkJKrj6h0ZPK8WED/ZeB1WAACAAQAAgAAAAIAAAQCJAgAAAAGBuBuu5OIheS4SKtYJufScCJDTWWLopBoXtFWhPDuRWQEAAAAA/f///wKNsQEAAAAAACJRIAjXFSnHwcD+J/obgd9CxVneHsUyFKM9xU7NY5K3DgCxHwIAAAAAAAAiUSAhUe66hJMCB1esHqXtxRVJHmviQ4ZjzFIwDWDPk+1KY6VyIQABASuNsQEAAAAAACJRIAjXFSnHwcD+J/obgd9CxVneHsUyFKM9xU7NY5K3DgCxAQMEAAAAAAETQCG/ZGuefjDVqBhmgVEuV1HbdxoZKDDWWTvTUrq6MJreRzj22k/WcFni6yPn9PGZkptZSNx9waf8ouP28ogJz24hFnRZPMvN82XI+lnim7dRKwFgpHnqiDoMGnIoFoSQRX7bGQA/2XgdVgAAgAEAAIAAAACAAQAAAAIAAAABFyB0WTzLzfNlyPpZ4pu3USsBYKR56og6DBpyKBaEkEV+2wAAIQflpK6JYWolG3K2DU7FU3hlkwSdU/69bglhZxaprqSvyxkAP9l4HVYAAIABAACAAAAAgAEAAAADAAAAAQUg5aSuiWFqJRtytg1OxVN4ZZMEnVP+vW4JYWcWqa6kr8sA"
             let psbt = try PSBT.fromString(strPSBT: strSignedPsbt);
             
             XCTAssertEqual(0, psbt.psbtInputs[0].derivedPublicKeys.count)
-//            XCTAssertEqual("74593ccbcdf365c8fa59e29bb7512b0160a479ea883a0c1a7228168490457edb",psbt.psbtInputs[0].tapDerivedPublicKeys.keySet().iterator().next().getPubKeyXCoord())
-//            Map<KeyDerivation, List<Sha256Hash>> tapInKeyDerivations = psbt.getPsbtInputs().get(0).getTapDerivedPublicKeys().values().iterator().next();
-//            XCTAssertEqual("3fd9781d", tapInKeyDerivations.keySet().iterator().next().getMasterFingerprint());
-//            
-//            XCTAssertEqual(0, psbt.getPsbtOutputs().get(0).getDerivedPublicKeys().size());
-//            XCTAssertEqual("e5a4ae89616a251b72b60d4ec553786593049d53febd6e09616716a9aea4afcb", Utils.bytesToHex(psbt.getPsbtOutputs().get(1).getTapDerivedPublicKeys().keySet().iterator().next().getPubKeyXCoord()));
-//            Map<KeyDerivation, List<Sha256Hash>> tapOutKeyDerivations = psbt.getPsbtOutputs().get(1).getTapDerivedPublicKeys().values().iterator().next();
-//                    XCTAssertEqual("3fd9781d", tapOutKeyDerivations.keySet().iterator().next().getMasterFingerprint());
+            XCTAssertEqual("74593ccbcdf365c8fa59e29bb7512b0160a479ea883a0c1a7228168490457edb",psbt.psbtInputs[0].tapDerivedPublicKeys.keys.first!.toHexString())
+            let tapInKeyDerivations = psbt.psbtInputs[0].tapDerivedPublicKeys.values.first
+            XCTAssertEqual("3fd9781d", tapInKeyDerivations!.keys.first!.getMasterFingerprint()!)
+            
+            XCTAssertEqual(0, psbt.psbtOutputs[0].derivedPublicKeys.count)
+            XCTAssertEqual("e5a4ae89616a251b72b60d4ec553786593049d53febd6e09616716a9aea4afcb", psbt.psbtOutputs[1].tapDerivedPublicKeys.keys.first?.toHexString())
+            let tapOutKeyDerivations = psbt.psbtOutputs[1].tapDerivedPublicKeys.values.first
+            XCTAssertEqual("3fd9781d", tapOutKeyDerivations!.keys.first!.getMasterFingerprint())
         } catch let error {
             debugPrint(error.localizedDescription)
         }

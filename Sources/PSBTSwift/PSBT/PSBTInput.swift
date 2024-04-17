@@ -38,7 +38,7 @@ public class PSBTInput {
     public var proprietary = [String: String]()
     public var tapKeyPathSignature: TransactionSignature?
     public var tapDerivedPublicKeys = [[UInt8]: [KeyDerivation: [Data]]]()
-    public var tapInternalKey: BitcoinKey?
+    public var tapInternalKey: [UInt8]?
 
     public var transaction: Transaction
     public var index: Int = 0
@@ -61,7 +61,7 @@ public class PSBTInput {
                 porCommitment: String? = nil,
                 proprietary: [String : String] = [String: String](),
                 tapKeyPathSignature: TransactionSignature? = nil,
-                tapInternalKey: BitcoinKey? = nil,
+                tapInternalKey: [UInt8]? = nil,
                 transaction: Transaction, index: Int) {
         self.psbt = psbt
         self.nonWitnessUtxo = nonWitnessUtxo
@@ -243,8 +243,25 @@ public class PSBTInput {
                     throw PSBTError.message("Invalid entry data")
                 }
                 self.tapKeyPathSignature = try TransactionSignature.decodeFromBitcoin(type: TransactionType.schnorr, data: entrydata, requireCanonicalEncoding: true)
-            case PSBTInput.PSBT_IN_TAP_BIP32_DERIVATION: break
-            case PSBTInput.PSBT_IN_TAP_INTERNAL_KEY: break
+            case PSBTInput.PSBT_IN_TAP_BIP32_DERIVATION: 
+                try entry.checkOneBytePlusXOnlyPubKey()
+                guard let tapPublicKey = entry.keyData, let entryData = entry.data else {
+                    throw PSBTError.message("Invalid entry key data")
+                }
+                let tapKeyDerivations = try PSBTEntry.parseTaprootKeyDerivation(data: Data(entryData))
+                if(tapKeyDerivations.isEmpty) {
+                    throw PSBTError.message("PSBT provided an invalid input taproot key derivation");
+                } else {
+                    self.tapDerivedPublicKeys[tapPublicKey] = tapKeyDerivations
+                }
+                break;
+            case PSBTInput.PSBT_IN_TAP_INTERNAL_KEY: 
+                try entry.checkOneByteKey()
+                    guard let tapInternalKey = entry.data else {
+                        throw PSBTError.message("Invalid entry data")
+                    }
+                self.tapInternalKey = tapInternalKey
+                break
             default:
                 break
             }
@@ -313,7 +330,7 @@ public class PSBTInput {
         }
         
         if let tapInternalKey = tapInternalKey {
-            entries.append(PSBTEntry.populateEntry(type: PSBTInput.PSBT_IN_TAP_INTERNAL_KEY, keyData: nil, data: tapInternalKey.privateKey?.bytes))
+            entries.append(PSBTEntry.populateEntry(type: PSBTInput.PSBT_IN_TAP_INTERNAL_KEY, keyData: nil, data: tapInternalKey))
         }
         
         return entries
@@ -420,15 +437,15 @@ public class PSBTInput {
                 guard let outputKey = try? ScriptType.P2TR.getPublicKeyFromScript(script: try getUtxo()!.getScript()) else {
                     throw PSBTError.message("Tweaked internal key does not verify against provided taproot keypath signature")
                 }
-//                if try !Crypto.verifySignature(tapKeyPathSignature!, message: hash, publicKey: outputKey) {
-//                    throw PSBTError.message("Tweaked internal key does not verify against provided taproot keypath signature")
-//                }
+                if !(try tapKeyPathSignature?.verify(hash: hash, pub: outputKey))! {
+                    throw PSBTError.message("Tweaked internal key does not verify against provided taproot keypath signature")
+                }
             } else {
                 for sigPublicKey in partialSignatures.keys {
                     let signature = getPartialSignature(publicKey: sigPublicKey)
-//                    if try !Crypto.verifySignature(signature, message: hash, publicKey: Data(sigPublicKey)) {
-//                        throw PSBTError.message("Partial signature does not verify against provided public key")
-//                    }
+                    if !(try signature?.verify(hash: hash, pub: Data(sigPublicKey)))! {
+                        throw PSBTError.message("Partial signature does not verify against provided public key")
+                    }
                 }
             }
 
@@ -469,9 +486,9 @@ public class PSBTInput {
 
             for sigPublicKey in availableKeys {
                 for signature in signatures {
-//                    if verify(hash: hash, signature: signature, publicKey: sigPublicKey) {
+                    if try signature.verify(hash: hash, pub: sigPublicKey) {
                         signingKeys[sigPublicKey] = signature
-//                    }
+                    }
                 }
             }
         }

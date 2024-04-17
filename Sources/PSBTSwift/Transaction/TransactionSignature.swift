@@ -83,7 +83,7 @@ public struct TransactionSignature: Hashable {
         if type == TransactionType.ecdsa {
             return try ECDSASignature.decodeFromBitcoin(bytes: data, requireCanonicalEncoding: requireCanonicalEncoding, requireCanonicalSValue: false)
         }
-        return try ECDSASignature.decodeFromBitcoin(bytes: data, requireCanonicalEncoding: requireCanonicalEncoding, requireCanonicalSValue: false)
+        return try SchnorrSignature.decodeFromBitcoin(bytes: data)
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -108,6 +108,16 @@ public struct TransactionSignature: Hashable {
             }
         }
         return false
+    }
+    
+    public func verify(hash: Data, pub: Data) throws -> Bool {
+        if let _ecdsaSignature = ecdsaSignature {
+            return try _ecdsaSignature.verify(data: hash, pub: pub)
+        } else if let _schnorrSignature = schnorrSignature {
+            return try _schnorrSignature.verify(data: hash, pub: pub)
+        } else {
+            throw PSBTError.message("TransactionSignature verify error")
+        }
     }
 }
 

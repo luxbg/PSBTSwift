@@ -610,7 +610,7 @@ public class Transaction: ChildMessage {
             for output in outputs {
                 try output.bitcoinSerializeToData(data: &outputData)
             }
-            bosData.append(contentsOf: outputData.bytes)
+            bosData.append(contentsOf: outputData.bytes.sha256())
         }
 
         var spendType: UInt8 = 0x00

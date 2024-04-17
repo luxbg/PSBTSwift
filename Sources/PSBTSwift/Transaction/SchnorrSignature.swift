@@ -33,7 +33,7 @@ public struct SchnorrSignature:Equatable, Hashable {
         return SchnorrSignature(r: rData, s: sData)
     }
     
-    public func decodeFromBitcoin(bytes: Data) throws -> TransactionSignature {
+    public static func decodeFromBitcoin(bytes: [UInt8]) throws -> TransactionSignature {
         guard bytes.count >= 64 && bytes.count <= 65 else {
             throw PSBTError.message("SchnorrSignature decodeFromBitcoin error")
         }
@@ -42,10 +42,10 @@ public struct SchnorrSignature:Equatable, Hashable {
         let sData = Array(bytes[32...])
 
         if bytes.count == 65 {
-            return TransactionSignature(r: r, s: s, type: TransactionType.schnorr, sigHahsFlags: bytes[64])
+            return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: bytes[64])
         }
 
-        return TransactionSignature(r: r, s: s, type: TransactionType.schnorr, sigHahsFlags: 0)
+        return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: 0)
     }
 
     public func verify(data: Data, pub: Data) throws -> Bool {
