@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/yuzhiyou1990/BitcoinSwift.git", from: "1.0.1"),
         .package(url: "https://github.com/mw99/DataCompression", from: "3.4.1"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.62.0"),
-        .package(url: "https://github.com/xueyuejie/ASN1.git", branch: "master")
+        .package(url: "https://github.com/xueyuejie/ASN1.git", .branch("master"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
