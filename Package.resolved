@@ -5,18 +5,18 @@
         "package": "ASN1",
         "repositoryURL": "https://github.com/xueyuejie/ASN1.git",
         "state": {
-          "branch": "master",
-          "revision": "6256620e2f9ba46e1f7ac513f8873ede201d4393",
-          "version": null
+          "branch": null,
+          "revision": "7d42163c4c82115086be8ea209a402551cfb6707",
+          "version": "2.5.2"
         }
       },
       {
         "package": "Asn1BInt",
         "repositoryURL": "https://github.com/xueyuejie/Asn1BInt.git",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "c38fa5c314ff1041a2db67ab86e03f9f6ee7e4b9",
-          "version": null
+          "version": "1.17.1"
         }
       },
       {
