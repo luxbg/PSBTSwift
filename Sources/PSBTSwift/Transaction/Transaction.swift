@@ -8,7 +8,7 @@
 import Foundation
 import CryptoSwift
 import BigInt
-import BitcoinSwift
+//import BitcoinSwift
 
 public class Transaction: ChildMessage {
     public static let MAX_BLOCK_SIZE = 1000 * 1000
@@ -371,8 +371,8 @@ public class Transaction: ChildMessage {
         return addOutput(try TransactionOutput(transaction: self, value: value, script: try address.getOutputScript()!))
     }
 
-    public func addOutput(value: Int64, pubkey: BitcoinKey) throws -> TransactionOutput {
-        return addOutput(try TransactionOutput(transaction: self, value: value, script: try! ScriptType.P2PK.getOutputScript(key: pubkey)))
+    public func addOutput(value: Int64, pubkey: Data) throws -> TransactionOutput {
+        return addOutput(try TransactionOutput(transaction: self, value: value, script: try! ScriptType.P2PK.getOutputScript(publicKey: pubkey)))
     }
 
     public func addOutput(_ output: TransactionOutput) -> TransactionOutput {

@@ -47,24 +47,6 @@
         }
       },
       {
-        "package": "BIP39swift",
-        "repositoryURL": "https://github.com/mathwallet/BIP39swift",
-        "state": {
-          "branch": null,
-          "revision": "6e654c1fedac7dc3f01443d8bdf108ab6d50245d",
-          "version": "1.0.1"
-        }
-      },
-      {
-        "package": "BitcoinSwift",
-        "repositoryURL": "https://github.com/yuzhiyou1990/BitcoinSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "06b1721dce7d48f4fa59e1ce1403647b3f8c0975",
-          "version": "1.0.6"
-        }
-      },
-      {
         "package": "CryptoSwift",
         "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
         "state": {
@@ -123,8 +105,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "635b2589494c97e48c62514bc8b37ced762e0a62",
-          "version": "2.63.0"
+          "revision": "fc63f0cf4e55a4597407a9fc95b16a2bc44b4982",
+          "version": "2.64.0"
         }
       },
       {

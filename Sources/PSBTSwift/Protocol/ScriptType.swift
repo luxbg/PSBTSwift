@@ -7,7 +7,7 @@
 
 import Foundation
 import CryptoSwift
-import BitcoinSwift
+//import BitcoinSwift
 
 public enum ScriptType: String, CaseIterable {
     
@@ -23,8 +23,8 @@ public enum ScriptType: String, CaseIterable {
     
     case P2PK, P2PKH, MULTISIG, P2SH, P2SH_P2WPKH, P2SH_P2WSH, P2WPKH, P2WSH, P2TR
     
-    public func getWeakedOutputKey(derivedKey: BitcoinKey) -> Data? {
-        guard let payload = Utils.getDataXCoord(derivedKey.publicKey) else{
+    public func getWeakedOutputKey(publicKey: Data) -> Data? {
+        guard let payload = Utils.getDataXCoord(publicKey) else{
             return nil
         }
         return payload
@@ -45,25 +45,25 @@ public enum ScriptType: String, CaseIterable {
         }
     }
     
-    public func getAddress(derivedKey: BitcoinKey) throws -> Address {
+    public func getAddress(publicKey: Data) throws -> Address {
         switch self {
-        case .P2PK: return try getAddress(pubKey: derivedKey.publicKey.bytes)
-        case .P2PKH: return try getAddress(pubKey: derivedKey.pubKeyHash.bytes)
+        case .P2PK: return try getAddress(pubKey: publicKey.bytes)
+        case .P2PKH: return try getAddress(pubKey: publicKey.hash160()!.bytes)
         case .MULTISIG:
             throw PSBTError.message("No single key address for wrapped witness script hash type")
         case .P2SH:
             throw PSBTError.message("No single key address for script hash type")
         case .P2SH_P2WPKH:
-            let p2wpkhScript = try ScriptType.P2WPKH.getOutputScript(pubKey: derivedKey.pubKeyHash.bytes)
+            let p2wpkhScript = try ScriptType.P2WPKH.getOutputScript(pubKey: publicKey.hash160()!.bytes)
             return try ScriptType.P2SH.getAddress(script: p2wpkhScript)
         case .P2SH_P2WSH:
             throw PSBTError.message("No single key address for wrapped witness script hash type")
         case .P2WPKH:
-            return try getAddress(pubKey: derivedKey.pubKeyHash.bytes)
+            return try getAddress(pubKey: publicKey.hash160()!.bytes)
         case .P2WSH:
             throw PSBTError.message("No single key address for witness script hash type")
         case .P2TR:
-            guard let data = getWeakedOutputKey(derivedKey: derivedKey) else {
+            guard let data = getWeakedOutputKey(publicKey: publicKey) else {
                 throw PSBTError.message("p2tr data error")
             }
             return try getAddress(pubKey: data.bytes)
@@ -138,24 +138,24 @@ public enum ScriptType: String, CaseIterable {
         }
     }
     
-    public func getOutputScript(key: BitcoinKey) throws -> Script {
+    public func getOutputScript(publicKey:Data) throws -> Script {
         switch self {
-        case .P2PK: return try getOutputScript(pubKey: key.publicKey.bytes)
-        case .P2PKH: return try getOutputScript(pubKey: key.pubKeyHash.bytes)
+        case .P2PK: return try getOutputScript(pubKey: publicKey.bytes)
+        case .P2PKH: return try getOutputScript(pubKey: publicKey.hash160()!.bytes)
         case .MULTISIG:
             throw PSBTError.message("Output script for multisig script type must be constructed with method getOutputScript(int threshold, List<ECKey> pubKeys)")
         case .P2SH:
             throw PSBTError.message("No single key output script for script hash type")
         case .P2SH_P2WPKH:
-            return try ScriptType.P2WPKH.getOutputScript(pubKey: key.pubKeyHash.bytes)
+            return try ScriptType.P2WPKH.getOutputScript(pubKey:publicKey.hash160()!.bytes)
         case .P2SH_P2WSH:
             throw PSBTError.message("No single key output script for wrapped witness script hash type")
         case .P2WPKH:
-            return try getOutputScript(pubKey: key.pubKeyHash.bytes)
+            return try getOutputScript(pubKey: publicKey.hash160()!.bytes)
         case .P2WSH:
             throw PSBTError.message("No single key output script for witness script hash type")
         case .P2TR:
-            guard let data = getWeakedOutputKey(derivedKey: key) else {
+            guard let data = getWeakedOutputKey(publicKey: publicKey) else {
                 throw PSBTError.message("p2tr key error")
             }
             return try getOutputScript(pubKey: data.bytes)
@@ -218,9 +218,9 @@ public enum ScriptType: String, CaseIterable {
         }
     }
     
-    public func getOutputDescriptor(key: BitcoinKey) throws -> String {
+    public func getOutputDescriptor(publicKey: Data) throws -> String {
         switch self {
-        case .P2PK, .P2PKH, .P2SH_P2WPKH, .P2WPKH, .P2TR: return getDescriptor() + key.publicKey.toHexString() + getCloseDescriptor()
+        case .P2PK, .P2PKH, .P2SH_P2WPKH, .P2WPKH, .P2TR: return getDescriptor() + publicKey.toHexString() + getCloseDescriptor()
         case .MULTISIG:
             throw PSBTError.message("No single key output descriptor for multisig script type")
         case .P2SH, .P2SH_P2WSH, .P2WSH:
@@ -489,30 +489,30 @@ public enum ScriptType: String, CaseIterable {
         }
     }
     
-    public func addSpendingInput(transaction: Transaction, prevOutput: TransactionOutput, pubKey: BitcoinKey, signature: Data) throws -> TransactionInput {
+    public func addSpendingInput(transaction: Transaction, prevOutput: TransactionOutput, publicKey: Data, signature: Data) throws -> TransactionInput {
         switch self {
         case .P2PK, .P2PKH:
-            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey: pubKey.publicKey, signature: signature)
+            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey: publicKey, signature: signature)
             return try transaction.addInput(spendTxHash: try prevOutput.getHash(), outputIndex: prevOutput.getIndex(), script: scriptSig)
         case .MULTISIG:
             throw PSBTError.message("\(self) is a multisig script type")
         case .P2SH:
             throw PSBTError.message("Only multisig scriptSigs supported for \(self) scriptPubKeys")
         case .P2SH_P2WPKH:
-            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey:  pubKey.publicKey, signature: signature)
-            let witness = TransactionWitness(transaction: transaction, pubKey: pubKey, signature: signature)
+            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey:  publicKey, signature: signature)
+            let witness = TransactionWitness(transaction: transaction, pubKey: publicKey, signature: signature)
             return try transaction.addInput(spendTxHash: prevOutput.getHash(), outputIndex: prevOutput.getIndex(), script: scriptSig, witness: witness)
         case .P2SH_P2WSH:
             throw PSBTError.message("Only multisig scriptSigs supported for \(self) scriptPubKeys")
         case .P2WPKH:
-            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey:  pubKey.publicKey, signature: signature)
-            let witness = TransactionWitness(transaction: transaction, pubKey: pubKey, signature: signature)
+            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey: publicKey, signature: signature)
+            let witness = TransactionWitness(transaction: transaction, pubKey: publicKey, signature: signature)
             return try transaction.addInput(spendTxHash: try prevOutput.getHash(), outputIndex: prevOutput.getIndex(), script: scriptSig, witness: witness)
         case .P2WSH:
             throw PSBTError.message("Only multisig scriptSigs supported for \(self) scriptPubKeys")
         case .P2TR:
-            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey:  pubKey.publicKey, signature: signature)
-            let witness = TransactionWitness(transaction: transaction, pubKey: pubKey, signature: signature)
+            let scriptSig = try getScriptSig(scriptPubKey: prevOutput.getScript(), pubKey: publicKey, signature: signature)
+            let witness = TransactionWitness(transaction: transaction, pubKey: publicKey, signature: signature)
             return try transaction.addInput(spendTxHash: try prevOutput.getHash(), outputIndex: prevOutput.getIndex(), script: scriptSig, witness: witness)
         }
     }

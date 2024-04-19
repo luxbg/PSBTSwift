@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import BitcoinSwift
+//import BitcoinSwift
 
 public class TransactionWitness: ChildMessage, Equatable {
     
@@ -18,11 +18,11 @@ public class TransactionWitness: ChildMessage, Equatable {
         pushes.append(signature)
     }
 
-    public init(transaction: Transaction, pubKey: BitcoinKey, signature: Data) {
+    public init(transaction: Transaction, pubKey: Data, signature: Data) {
         self.pushes = []
         super.init()
         pushes.append(signature)
-        pushes.append(pubKey.publicKey)
+        pushes.append(pubKey)
     }
 
     public init(transaction: Transaction, signatures: [Data], witnessScript: Script) throws {
@@ -86,20 +86,6 @@ public class TransactionWitness: ChildMessage, Equatable {
         return length
     }
     
-//    func bitcoinSerializeToStream(stream: OutputStream) throws {
-//        let varIntPushes = VarInt(value: Int64(pushes.count)).encode()
-//        stream.write(varIntPushes, maxLength: varIntPushes.count)
-//        for push in pushes {
-//            if push.count == 1 && push[0] == 0 {
-//                stream.write(push.bytes, maxLength: push.count)
-//            } else {
-//                let varIntPushLength = VarInt(value: Int64(push.count)).encode()
-//                stream.write(varIntPushLength, maxLength: varIntPushLength.count)
-//                stream.write(push.bytes, maxLength: push.count)
-//            }
-//        }
-//    }
-    
     public override func bitcoinSerializeToData(data: inout Data) throws {
         let varIntPushes = VarInt(value: Int64(pushes.count))
         data.append(contentsOf: varIntPushes.encode())
@@ -115,8 +101,6 @@ public class TransactionWitness: ChildMessage, Equatable {
     }
 
     public func toByteArray() throws -> Data {
-//        let stream = OutputStream.toMemory()
-//        stream.open()
         var data = Data()
         do {
             try bitcoinSerializeToData(data: &data)

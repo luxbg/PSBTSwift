@@ -8,7 +8,8 @@
 import Foundation
 import BigInt
 import CryptoSwift
-import BitcoinSwift
+import RIPEMDSwift
+//import BitcoinSwift
 
 public struct Utils {
     
@@ -170,35 +171,6 @@ public struct Utils {
         return formatter.string(from: date)
     }
     
-//    public static func decodeMPI(bytes: [UInt8], hasLength: Bool) -> BigInt {
-//        var buf: [UInt8]
-//        if hasLength {
-//            let length = Int(readUint32BE(mpi: mpi, offset: 0))
-//            buf = Array(mpi[4..<4+length])
-//        } else {
-//            buf = mpi
-//        }
-//        if buf.isEmpty {
-//            return BInt.ZERO
-//        }
-//        let isNegative = (buf[0] & 0x80) == 0x80
-//        if isNegative {
-//            buf[0] &= 0x7f
-//        }
-//        let result = BigInt(Data(buf))
-//        return isNegative ? -result : result
-//    }
-//    
-//    public static func decodeCompactBits(compact: Int64) -> BigInt {
-//        let size = Int((compact >> 24) & 0xFF)
-//        var bytes = [UInt8](repeating: 0, count: 4 + size)
-//        bytes[3] = UInt8(size)
-//        if size >= 1 { bytes[4] = UInt8((compact >> 16) & 0xFF) }
-//        if size >= 2 { bytes[5] = UInt8((compact >> 8) & 0xFF) }
-//        if size >= 3 { bytes[6] = UInt8(compact & 0xFF) }
-//        return decodeMPI(bytes: bytes, hasLength: true)
-//    }
-//    
     public static func join<T>(_ items: [T]) -> String {
         return items.map { "\($0)" }.joined(separator: " ")
     }
@@ -272,5 +244,15 @@ extension Array where Element == UInt8 {
         addressBytes.append(contentsOf: [UInt8(version)])
         addressBytes.append(contentsOf: self)
         return addressBytes.bytes.base58CheckEncodedString
+    }
+}
+
+extension Data {
+    public func hash160() -> Data? {
+        return try? RIPEMD160.hash(message: self.sha256())
+    }
+    
+    public func hash256() -> Data {
+        return self.sha256().sha256()
     }
 }

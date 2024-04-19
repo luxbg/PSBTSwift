@@ -118,7 +118,6 @@ public class ScriptChunk {
                 }
                 outData.append(contentsOf: [UInt8(ScriptOpCodes.OP_PUSHDATA2)])
                 let length = UInt16(data.count)
-                var bytes = [UInt8]()
                 try Utils.uint16ToDataLE(val: length, outData: &outData)
             } else if opcode == ScriptOpCodes.OP_PUSHDATA4 {
                 if data.count > Script.MAX_SCRIPT_ELEMENT_SIZE {

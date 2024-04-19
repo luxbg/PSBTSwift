@@ -370,21 +370,21 @@ public struct ScriptOpCodes {
     ]
     
     public static func getOpCodeName(opcode: Int) -> String {
-        if var opCodeName = opCodeMap[opcode] {
+        if let opCodeName = opCodeMap[opcode] {
             return opCodeName
         }
         return "NON_OP(\(opcode))"
     }
 
     public static func getPushDataName(opcode: Int) -> String {
-        if var opCodeName = opCodeMap[opcode] {
+        if let opCodeName = opCodeMap[opcode] {
             return opCodeName
         }
         return "PUSHDATA(\(opcode))"
     }
 
     public static func getOpCode(opCodeName: String) -> Int {
-        if var opCode = opCodeNameMap[opCodeName] {
+        if let opCode = opCodeNameMap[opCodeName] {
             return opCode
         }
         return OP_INVALIDOPCODE
