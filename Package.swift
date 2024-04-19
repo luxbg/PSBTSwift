@@ -36,9 +36,9 @@ let package = Package(
                            .product(name: "BIP32Swift", package: "Secp256k1Swift"),
                            "Base58Swift",
                            "ASN1",
-                           "CryptoKitC"]
+                           "PSBTCryptoKit"]
         ),
-        .target(name: "CryptoKitC"),
+        .target(name: "PSBTCryptoKit"),
         .testTarget(
             name: "PSBTSwiftTests",
             dependencies: ["PSBTSwift"]),
