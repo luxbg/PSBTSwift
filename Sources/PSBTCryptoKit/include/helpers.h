@@ -14,10 +14,10 @@ typedef struct {
      * where p = 2^256 - 0x1000003D1
      */
     uint64_t n[5];
-} secp256k1_fe;
+} secp256k1_psbt_fe;
 
-void secp256k1_fe_clear(secp256k1_fe *a);
-int secp256k1_fe_set_b32(secp256k1_fe *r, const unsigned char *a);
-void secp256k1_fe_get_b32(unsigned char *r, const secp256k1_fe *a);
-void secp256k1_fe_normalize_var(secp256k1_fe *r);
+void secp256k1_psbt_fe_clear(secp256k1_psbt_fe *a);
+int secp256k1_psbt_fe_set_b32(secp256k1_psbt_fe *r, const unsigned char *a);
+void secp256k1_psbt_fe_get_b32(unsigned char *r, const secp256k1_psbt_fe *a);
+void secp256k1_psbt_fe_normalize_var(secp256k1_psbt_fe *r);
 #endif /* HELPERS_H */

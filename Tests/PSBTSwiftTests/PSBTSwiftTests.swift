@@ -521,4 +521,14 @@ final class PSBTSwiftTests: XCTestCase {
             debugPrint(error.localizedDescription)
         }
     }
+    
+    func testPsbtUnisetExample() {
+        do {
+            
+            let psbt = try PSBT.fromString(strPSBT: "")
+            debugPrint(psbt.inputs)
+        } catch let error {
+            
+        }
+    }
 }

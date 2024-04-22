@@ -32,35 +32,35 @@ public struct SchnorrHelper{
         let yBytes = yCoordinate.serialize().bytes
         let xCoordinateBytes = [UInt8](repeating: 0, count: 32 - xBytes.count) + xBytes
         let yCoordinateBytes = [UInt8](repeating: 0, count: 32 - yBytes.count) + yBytes
-        var xCoordinateField = secp256k1_fe()
-        var yCoordinateField = secp256k1_fe()
+        var xCoordinateField = secp256k1_psbt_fe()
+        var yCoordinateField = secp256k1_psbt_fe()
 
         defer {
-            secp256k1_fe_clear(&xCoordinateField)
-            secp256k1_fe_clear(&yCoordinateField)
+            secp256k1_psbt_fe_clear(&xCoordinateField)
+            secp256k1_psbt_fe_clear(&yCoordinateField)
         }
 
         guard xCoordinateBytes.withUnsafeBytes({ rawBytes -> Bool in
             guard let rawPointer = rawBytes.bindMemory(to: UInt8.self).baseAddress else { return false }
-            return secp256k1_fe_set_b32(&xCoordinateField, rawPointer) == 1
+            return secp256k1_psbt_fe_set_b32(&xCoordinateField, rawPointer) == 1
         }) else {
             throw SchnorrError.liftXError
         }
 
         guard yCoordinateBytes.withUnsafeBytes({ rawBytes -> Bool in
             guard let rawPointer = rawBytes.bindMemory(to: UInt8.self).baseAddress else { return false }
-            return secp256k1_fe_set_b32(&yCoordinateField, rawPointer) == 1
+            return secp256k1_psbt_fe_set_b32(&yCoordinateField, rawPointer) == 1
         }) else {
             throw SchnorrError.liftXError
         }
 
-        secp256k1_fe_normalize_var(&xCoordinateField)
-        secp256k1_fe_normalize_var(&yCoordinateField)
+        secp256k1_psbt_fe_normalize_var(&xCoordinateField)
+        secp256k1_psbt_fe_normalize_var(&yCoordinateField)
         
         var keyBytes = [UInt8](repeating: 0, count: 64)
 
-        secp256k1_fe_get_b32(&keyBytes[0], &xCoordinateField)
-        secp256k1_fe_get_b32(&keyBytes[32], &yCoordinateField)
+        secp256k1_psbt_fe_get_b32(&keyBytes[0], &xCoordinateField)
+        secp256k1_psbt_fe_get_b32(&keyBytes[32], &yCoordinateField)
 
         return try Data(from: SECP256K1_TAG_PUBKEY_UNCOMPRESSED as! Decoder)[0..<1] + Data(keyBytes)
     }

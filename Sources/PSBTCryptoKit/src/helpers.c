@@ -7,7 +7,7 @@
 
 #include "helpers.h"
 
-int secp256k1_fe_set_b32(secp256k1_fe *r, const unsigned char *a) {
+int secp256k1_psbt_fe_set_b32(secp256k1_psbt_fe *r, const unsigned char *a) {
     int ret;
     r->n[0] = (uint64_t)a[31]
     | ((uint64_t)a[30] << 8)
@@ -47,7 +47,7 @@ int secp256k1_fe_set_b32(secp256k1_fe *r, const unsigned char *a) {
     return ret;
 }
 
-void secp256k1_fe_get_b32(unsigned char *r, const secp256k1_fe *a) {
+void secp256k1_psbt_fe_get_b32(unsigned char *r, const secp256k1_psbt_fe *a) {
     r[0] = (a->n[4] >> 40) & 0xFF;
     r[1] = (a->n[4] >> 32) & 0xFF;
     r[2] = (a->n[4] >> 24) & 0xFF;
@@ -82,7 +82,7 @@ void secp256k1_fe_get_b32(unsigned char *r, const secp256k1_fe *a) {
     r[31] = a->n[0] & 0xFF;
 }
 
-void secp256k1_fe_normalize_var(secp256k1_fe *r) {
+void secp256k1_psbt_fe_normalize_var(secp256k1_psbt_fe *r) {
     uint64_t t0 = r->n[0], t1 = r->n[1], t2 = r->n[2], t3 = r->n[3], t4 = r->n[4];
 
     /* Reduce t4 at the start so there will be at most a single carry from the first pass */
@@ -120,7 +120,7 @@ void secp256k1_fe_normalize_var(secp256k1_fe *r) {
     r->n[0] = t0; r->n[1] = t1; r->n[2] = t2; r->n[3] = t3; r->n[4] = t4;
 }
 
-void secp256k1_fe_clear(secp256k1_fe *a) {
+void secp256k1_psbt_fe_clear(secp256k1_psbt_fe *a) {
     int i;
     for (i=0; i<5; i++) {
         a->n[i] = 0;
