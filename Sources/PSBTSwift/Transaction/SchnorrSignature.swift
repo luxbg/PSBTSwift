@@ -47,6 +47,11 @@ public struct SchnorrSignature:Equatable, Hashable {
 
         return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: 0)
     }
+    
+    public static func sign(data: Data, privateKey: Data) throws -> SchnorrSignature {
+        let signature = try SchnorrHelper.sign(data: data, privateKey: privateKey)
+        return try SchnorrSignature.decode(bytes: signature.bytes)
+    }
 
     public func verify(data: Data, pub: Data) throws -> Bool {
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))!

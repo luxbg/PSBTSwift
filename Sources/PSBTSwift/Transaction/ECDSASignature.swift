@@ -51,6 +51,30 @@ public struct ECDSASignature: Equatable, Hashable {
         }
     }
     
+    public static func sign(data: Data, privateKey: Data) throws -> ECDSASignature {
+        precondition(data.count > 0, "Data must be non-zero size")
+        precondition(privateKey.count > 0, "PrivateKey must be non-zero size")
+
+        let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN))!
+        defer { secp256k1_context_destroy(ctx) }
+
+        let signature = UnsafeMutablePointer<secp256k1_ecdsa_signature>.allocate(capacity: 1)
+        let status = data.withUnsafeBytes { ptr in
+            privateKey.withUnsafeBytes { secp256k1_ecdsa_sign(ctx, signature, ptr.baseAddress!.assumingMemoryBound(to: UInt8.self), $0.baseAddress!.assumingMemoryBound(to: UInt8.self), nil, nil) }
+        }
+        guard status == 1 else { throw PSBTError.message("EcdsaSign error") }
+
+        let normalizedsig = UnsafeMutablePointer<secp256k1_ecdsa_signature>.allocate(capacity: 1)
+        secp256k1_ecdsa_signature_normalize(ctx, normalizedsig, signature)
+
+        var length: size_t = 128
+        var der = Data(count: length)
+        guard der.withUnsafeMutableBytes({ return secp256k1_ecdsa_signature_serialize_der(ctx, $0.baseAddress!.assumingMemoryBound(to: UInt8.self), &length, normalizedsig) }) == 1 else { throw PSBTError.message("EcdsaSign error") }
+        der.count = length
+
+        return try ECDSASignature.decodeFromDER(bytes: der.bytes)
+    }
+    
     public func verify(data: Data, pub: Data) throws -> Bool {
         let signature = Data(encodeToDER())
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))!

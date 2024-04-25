@@ -419,6 +419,33 @@ public class PSBTInput {
         }
     }
     
+    public func sign(privateKey: Data, publicKey: Data) throws -> Bool {
+        var localSigHash = sigHash
+        if localSigHash == nil {
+            localSigHash = getDefaultSigHash()
+        }
+        
+        if nonWitnessUtxo != nil || witnessUtxo != nil {
+            let signingScript = try getSigningScript()
+            if signingScript != nil {
+                let hash = try getHashForSignature(connectedScript: signingScript!, localSigHash: localSigHash!)
+                let type = isTaproot() ? SignatureType.SCHNORR : SignatureType.ECDSA
+                
+                let transactionSignature = try TransactionSignature.sign(privateKey: Data(), publicKey: Data(), input: hash, sigHash: localSigHash!, type: type)
+                
+                if type == .SCHNORR {
+                    tapKeyPathSignature = transactionSignature
+                } else {
+                    partialSignatures[publicKey.bytes] = transactionSignature
+                }
+                
+                return true
+            }
+        }
+        
+        return false
+    }
+    
     func verifySignatures() throws -> Bool {
         var localSigHash: SigHash
         if let _localSigHash = sigHash {
@@ -482,7 +509,6 @@ public class PSBTInput {
         var signingKeys = [Data: TransactionSignature]()
         if let _signingScript = signingScript {
             let hash = try getHashForSignature(connectedScript: _signingScript, localSigHash:  sigHash ?? getDefaultSigHash())
-//            (signingScript: signingScript!, localSigHash: sigHash ?? getDefaultSigHash())
 
             for sigPublicKey in availableKeys {
                 for signature in signatures {

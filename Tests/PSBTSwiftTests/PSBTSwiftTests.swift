@@ -1,6 +1,7 @@
 import XCTest
 import ASN1
 import BigInt
+import Secp256k1Swift
 @testable import PSBTSwift
 
 final class PSBTSwiftTests: XCTestCase {
@@ -520,6 +521,21 @@ final class PSBTSwiftTests: XCTestCase {
             XCTFail()
             debugPrint(error.localizedDescription)
         }
+    }
+    
+    func testSchnorrSignExample() throws {
+        let hash = Data(hex: "0580878bee0503768a91b49a27942b1e4c139734ccea771c61b8cea6b329ad23")
+        let privateKey = Data(hex: "d9bc817b92916a24b87d25dc48ef466b4fcd6c89cf90afbc17cba40eb8b91330")
+        let sign = try SchnorrSignature.sign(data: hash, privateKey: privateKey)
+        XCTAssertEqual("7b04f59bc8f5c2c33c9b8acbf94743de74cc25a6052b52ff61a516f7c5ca19cc68345ba99b354f22bfaf5c04de395b9223f3bf0a5c351fc1cc68c224f4e5b202", sign.encode().toHexString())
+    }
+    
+    func testEcdsaSignExample() throws {
+        let hash = Data(hex: "0580878bee0503768a91b49a27942b1e4c139734ccea771c61b8cea6b329ad23")
+        let privateKey = Data(hex: "d9bc817b92916a24b87d25dc48ef466b4fcd6c89cf90afbc17cba40eb8b91330")
+        let sign = try ECDSASignature.sign(data: hash, privateKey: privateKey)
+        debugPrint(sign.derByteArray().toHexString())
+        XCTAssertEqual("304402206d12ce1c56b09bccab11bf4fea94767c54119be2a154a2ad8b7091af43c98cf702200cb25fe5be690aa043662fb5fe9a91d78ab485810ada8a1dae982677731af3e5", sign.encodeToDER().toHexString())
     }
     
     func testPsbtUnisetExample() {
