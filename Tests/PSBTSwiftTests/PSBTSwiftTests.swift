@@ -538,13 +538,10 @@ final class PSBTSwiftTests: XCTestCase {
         XCTAssertEqual("304402206d12ce1c56b09bccab11bf4fea94767c54119be2a154a2ad8b7091af43c98cf702200cb25fe5be690aa043662fb5fe9a91d78ab485810ada8a1dae982677731af3e5", sign.encodeToDER().toHexString())
     }
     
-    func testPsbtUnisetExample() {
-        do {
-            
-            let psbt = try PSBT.fromString(strPSBT: "")
-            debugPrint(psbt.inputs)
-        } catch let error {
-            
-        }
+    func testDerivedKeyExample() throws {
+        let privateKey = Data(hex: "d9bc817b92916a24b87d25dc48ef466b4fcd6c89cf90afbc17cba40eb8b91330")
+        let publicKey = Data(hex: "02bd63cebd74be207ba61f105f1962106dde03a2e68a96835b158fa6faddd876fd")
+        let derivedKey = try SchnorrHelper.tweakedPrivateKey(privateKey: privateKey, publicKey: publicKey)
+        XCTAssertEqual("8f636f9a3e5988ae1197656120c66859056a328fbad88523a3f749e8db781d71", derivedKey.toHexString())
     }
 }

@@ -431,7 +431,7 @@ public class PSBTInput {
                 let hash = try getHashForSignature(connectedScript: signingScript!, localSigHash: localSigHash!)
                 let type = isTaproot() ? SignatureType.SCHNORR : SignatureType.ECDSA
                 
-                let transactionSignature = try TransactionSignature.sign(privateKey: privateKey, publicKey: publicKey, input: hash, sigHash: localSigHash!, type: type)
+                let transactionSignature = try TransactionSignature.sign(privateKey: privateKey, input: hash, sigHash: localSigHash!, type: type)
                 
                 if type == .SCHNORR {
                     tapKeyPathSignature = transactionSignature
