@@ -527,7 +527,7 @@ final class PSBTSwiftTests: XCTestCase {
         let hash = Data(hex: "0580878bee0503768a91b49a27942b1e4c139734ccea771c61b8cea6b329ad23")
         let privateKey = Data(hex: "d9bc817b92916a24b87d25dc48ef466b4fcd6c89cf90afbc17cba40eb8b91330")
         let publicKey = Data(hex: "02bd63cebd74be207ba61f105f1962106dde03a2e68a96835b158fa6faddd876fd")
-        let sign = try SchnorrSignature.sign(data: hash, privateKey: privateKey, publicKey: publicKey)
+        let sign = try SchnorrSignature.sign(data: hash, privateKey: privateKey)
         XCTAssertEqual("7b04f59bc8f5c2c33c9b8acbf94743de74cc25a6052b52ff61a516f7c5ca19cc68345ba99b354f22bfaf5c04de395b9223f3bf0a5c351fc1cc68c224f4e5b202", sign.encode().toHexString())
     }
     
