@@ -291,7 +291,7 @@ public class PSBT {
         return entries
     }
 
-    public func serialize(includeXpubs: Bool = true, includeNonWitnessUtxos: Bool = true) throws -> [UInt8] {
+    public func serialize(includeXpubs: Bool = true, includeNonWitnessUtxos: Bool = true, isFormUnisat: Bool = true) throws -> [UInt8] {
         var baos: [UInt8] = []
 
         baos.append(contentsOf: Data(hex: PSBT.PSBT_MAGIC_HEX).bytes)
@@ -448,8 +448,8 @@ public class PSBT {
         return extendedPublicKeys[publicKey]
     }
     
-    public func toString() throws -> String {
-        return try serialize().toHexString()
+    public func toString(isFromUnisat: Bool) throws -> String {
+        return try serialize(isFormUnisat: isFromUnisat).toHexString()
     }
 
     public func toBase64String() throws -> String {

@@ -270,11 +270,11 @@ public class PSBTInput {
         self.index = index
     }
     
-    public func getInputEntries() throws -> [PSBTEntry] {
+    public func getInputEntries(isFromUnisat: Bool = false) throws -> [PSBTEntry] {
         var entries: [PSBTEntry] = []
         
         if let nonWitnessUtxo = nonWitnessUtxo {
-            entries.append(PSBTEntry.populateEntry(type: PSBTInput.PSBT_IN_NON_WITNESS_UTXO, keyData: nil, data: try nonWitnessUtxo.bitcoinSerialize(useWitnessFormat: false)))
+            entries.append(PSBTEntry.populateEntry(type: PSBTInput.PSBT_IN_NON_WITNESS_UTXO, keyData: nil, data: try nonWitnessUtxo.bitcoinSerialize(useWitnessFormat: isFromUnisat)))
         }
         
         if let witnessUtxo = witnessUtxo {
@@ -419,7 +419,7 @@ public class PSBTInput {
         }
     }
     
-    public func sign(privateKey: Data, publicKey: Data) throws -> Bool {
+    public func sign(privateKey: Data, publicKey: Data, isOldVersion: Bool) throws -> Bool {
         var localSigHash = sigHash
         if localSigHash == nil {
             localSigHash = getDefaultSigHash()
@@ -431,7 +431,7 @@ public class PSBTInput {
                 let hash = try getHashForSignature(connectedScript: signingScript!, localSigHash: localSigHash!)
                 let type = isTaproot() ? SignatureType.SCHNORR : SignatureType.ECDSA
                 
-                let transactionSignature = try TransactionSignature.sign(privateKey: privateKey, input: hash, sigHash: localSigHash!, type: type)
+                let transactionSignature = try TransactionSignature.sign(privateKey: privateKey, input: hash, sigHash: localSigHash!, type: type, isOldVersion: isOldVersion)
                 
                 if type == .SCHNORR {
                     tapKeyPathSignature = transactionSignature

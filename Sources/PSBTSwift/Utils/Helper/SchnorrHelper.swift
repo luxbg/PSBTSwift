@@ -162,22 +162,28 @@ public struct SchnorrHelper{
         return Data(privateBytes)
     }
     
-    public static func sign(data: Data, privateKey: Data) throws -> Data {
+    public static func sign(data: Data, privateKey: Data, isOldVersion: Bool) throws -> Data {
         var message = data.bytes
-
-        let auxRandPointer = UnsafeMutableRawPointer.allocate(byteCount: 32, alignment: MemoryLayout<UInt8>.alignment)
-        for i in 0..<32 {
-            auxRandPointer.storeBytes(of: 0x00, toByteOffset: i, as: UInt8.self)
-        }
-
         var keypair = secp256k1_keypair()
-        var signature = [UInt8](repeating: 0, count: 64)
-        var extraParams = secp256k1_schnorrsig_extraparams(magic: magic, noncefp: nil, ndata: auxRandPointer)
-
-        guard secp256k1_keypair_create(SchnorrHelper.context, &keypair, privateKey.bytes) == 1,
-              secp256k1_schnorrsig_sign_custom(SchnorrHelper.context, &signature, &message, message.count, &keypair, &extraParams) == 1
-        else {
+        guard secp256k1_keypair_create(SchnorrHelper.context, &keypair, privateKey.bytes) == 1 else {
             throw SchnorrError.signError
+        }
+        var signature = [UInt8](repeating: 0, count: 64)
+        if isOldVersion {
+            guard secp256k1_schnorrsig_sign32(SchnorrHelper.context, &signature, &message, &keypair, nil) == 1
+            else {
+                throw SchnorrError.signError
+            }
+        } else {
+            let auxRandPointer = UnsafeMutableRawPointer.allocate(byteCount: 32, alignment: MemoryLayout<UInt8>.alignment)
+            for i in 0..<32 {
+                auxRandPointer.storeBytes(of: 0x00, toByteOffset: i, as: UInt8.self)
+            }
+            var extraParams = secp256k1_schnorrsig_extraparams(magic: magic, noncefp: nil, ndata: auxRandPointer)
+            guard secp256k1_schnorrsig_sign_custom(SchnorrHelper.context, &signature, &message, message.count, &keypair, &extraParams) == 1
+            else {
+                throw SchnorrError.signError
+            }
         }
 
         return Data(signature)

@@ -48,8 +48,8 @@ public struct SchnorrSignature:Equatable, Hashable {
         return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: 0)
     }
     
-    public static func sign(data: Data, privateKey: Data) throws -> SchnorrSignature {
-        let signature = try SchnorrHelper.sign(data: data, privateKey: privateKey)
+    public static func sign(data: Data, privateKey: Data, isOldVersion: Bool) throws -> SchnorrSignature {
+        let signature = try SchnorrHelper.sign(data: data, privateKey: privateKey, isOldVersion: isOldVersion)
         return try SchnorrSignature.decode(bytes: signature.bytes)
     }
 

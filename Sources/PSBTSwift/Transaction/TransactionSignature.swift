@@ -110,10 +110,10 @@ public struct TransactionSignature: Hashable {
         return false
     }
     
-    public static func sign(privateKey: Data, input: Data, sigHash: SigHash, type: SignatureType) throws -> TransactionSignature {
+    public static func sign(privateKey: Data, input: Data, sigHash: SigHash, type: SignatureType, isOldVersion: Bool) throws -> TransactionSignature {
         var transactionSignature: TransactionSignature
         if type == SignatureType.SCHNORR {
-            let schnorrSignature = try SchnorrSignature.sign(data: input, privateKey: privateKey)
+            let schnorrSignature = try SchnorrSignature.sign(data: input, privateKey: privateKey, isOldVersion: isOldVersion)
             transactionSignature = TransactionSignature(signature: schnorrSignature, sigHashFlags: sigHash.rawValue)
         } else {
             let ecdsaSignature = try ECDSASignature.sign(data: input, privateKey: privateKey)
