@@ -9,7 +9,6 @@ import Foundation
 import BigInt
 import CryptoSwift
 import RIPEMDSwift
-//import BitcoinSwift
 
 public struct Utils {
     

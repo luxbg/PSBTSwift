@@ -7,7 +7,6 @@
 
 import Foundation
 import CryptoSwift
-//import BitcoinSwift
 
 public enum ScriptType: String, CaseIterable {
     

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import BitcoinSwift
 
 public class Script {
     public static let MAX_SCRIPT_ELEMENT_SIZE: Int = 520

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import BitcoinSwift
 import Base58Swift
 import NIOCore
 

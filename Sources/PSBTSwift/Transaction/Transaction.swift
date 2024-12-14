@@ -8,7 +8,6 @@
 import Foundation
 import CryptoSwift
 import BigInt
-//import BitcoinSwift
 
 public class Transaction: ChildMessage {
     public static let MAX_BLOCK_SIZE = 1000 * 1000

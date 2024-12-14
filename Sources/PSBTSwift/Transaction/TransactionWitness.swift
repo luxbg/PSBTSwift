@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import BitcoinSwift
 
 public class TransactionWitness: ChildMessage, Equatable {
     

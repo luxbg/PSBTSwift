@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import BitcoinSwift
 
 public class PSBTInput {
     public static let PSBT_IN_NON_WITNESS_UTXO: UInt8 = 0x00
