@@ -19,7 +19,7 @@ let package = Package(
         .package(name: "Secp256k1Swift", url: "https://github.com/mathwallet/Secp256k1Swift", from: "2.0.0"),
         .package(name: "Bech32", url: "https://github.com/lishuailibertine/Bech32", from: "1.0.5"),
         .package(url: "https://github.com/mw99/DataCompression", from: "3.4.1"),
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.64.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
         .package(url: "https://github.com/mathwallet/Base58Swift.git", from: "0.0.1"),
         .package(url: "https://github.com/xueyuejie/ASN1.git", from: "2.5.2")
     ],
