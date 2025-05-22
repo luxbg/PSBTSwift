@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "Blake2",
+        "repositoryURL": "https://github.com/tesseract-one/Blake2.swift.git",
+        "state": {
+          "branch": null,
+          "revision": "29c55c8fe42d6661e5a32cc5bbbad1fff64fd01e",
+          "version": "0.2.0"
+        }
+      },
+      {
         "package": "CryptoSwift",
         "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
         "state": {

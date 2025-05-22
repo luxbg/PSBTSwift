@@ -6,17 +6,18 @@
 //
 
 import Foundation
-import CSecp256k1
+@_implementationOnly import CSecp256k1
 
-public struct SchnorrSignature:Equatable, Hashable {
+
+public struct SchnorrSignature: Equatable, Hashable {
     public let r: [UInt8]
     public let s: [UInt8]
-    
+
     public init(r: [UInt8], s: [UInt8]) {
         self.r = r
         self.s = s
     }
-    
+
     public func encode() -> [UInt8] {
         var bytes = [UInt8]()
         bytes.append(contentsOf: r)
@@ -32,8 +33,10 @@ public struct SchnorrSignature:Equatable, Hashable {
         let sData = Array(bytes[32...])
         return SchnorrSignature(r: rData, s: sData)
     }
-    
-    public static func decodeFromBitcoin(bytes: [UInt8]) throws -> TransactionSignature {
+
+    public static func decodeFromBitcoin(bytes: [UInt8]) throws
+        -> TransactionSignature
+    {
         guard bytes.count >= 64 && bytes.count <= 65 else {
             throw PSBTError.message("SchnorrSignature decodeFromBitcoin error")
         }
@@ -42,14 +45,30 @@ public struct SchnorrSignature:Equatable, Hashable {
         let sData = Array(bytes[32...])
 
         if bytes.count == 65 {
-            return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: bytes[64])
+            return TransactionSignature(
+                r: rData,
+                s: sData,
+                type: TransactionType.schnorr,
+                sigHahsFlags: bytes[64]
+            )
         }
 
-        return TransactionSignature(r: rData, s: sData, type: TransactionType.schnorr, sigHahsFlags: 0)
+        return TransactionSignature(
+            r: rData,
+            s: sData,
+            type: TransactionType.schnorr,
+            sigHahsFlags: 0
+        )
     }
-    
-    public static func sign(data: Data, privateKey: Data, isOldVersion: Bool) throws -> SchnorrSignature {
-        let signature = try SchnorrHelper.sign(data: data, privateKey: privateKey, isOldVersion: isOldVersion)
+
+    public static func sign(data: Data, privateKey: Data, isOldVersion: Bool)
+        throws -> SchnorrSignature
+    {
+        let signature = try SchnorrHelper.sign(
+            data: data,
+            privateKey: privateKey,
+            isOldVersion: isOldVersion
+        )
         return try SchnorrSignature.decode(bytes: signature.bytes)
     }
 
@@ -65,12 +84,13 @@ public struct SchnorrSignature:Equatable, Hashable {
         }) != 1 {
             return false
         }
-        
-        if secp256k1_schnorrsig_verify(ctx, &sig, &message, data.count, &pubkey) == 1 {
+
+        if secp256k1_schnorrsig_verify(ctx, &sig, &message, data.count, &pubkey)
+            == 1
+        {
             return true
         }
-       return false
+        return false
     }
-    
-    
+
 }
